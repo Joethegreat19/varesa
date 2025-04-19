@@ -38,7 +38,13 @@ end
 
 -- Update ESP Functionality
 function esp:updateESP()
-    if not self.espEnabled then return end
+    if not self.espEnabled then
+        -- Hide all drawings when ESP is disabled
+        for _, cache in pairs(self.espCache) do
+            cache.Drawing.Visible = false
+        end
+        return
+    end
 
     local player = Players.LocalPlayer
     local character = player.Character or player.CharacterAdded:Wait()
@@ -102,6 +108,16 @@ function esp:updateESP()
             end
         end
     end
+end
+
+-- Cleanup Function
+function esp:cleanup()
+    for _, cache in pairs(self.espCache) do
+        if cache.Drawing then
+            cache.Drawing:Remove()
+        end
+    end
+    table.clear(self.espCache)
 end
 
 return esp
